@@ -10,6 +10,7 @@
 #include <concepts>
 #include <ranges>
 #include <algorithm>
+#include <limits>
 
 using namespace std;
 using namespace std::views;
@@ -31,7 +32,7 @@ using namespace std::views;
 //             << count << '\n';
 // }
 
-template <signed_integral T>
+template <unsigned_integral T>
 void nsieve( T n)
 {
 	vector<bool> flags(n);
@@ -50,6 +51,18 @@ void nsieve( T n)
 	cout<<"Primes up to "<<setw(8)<<n<<' '<<setw(8)<<count<<'\n';
 }
 
+void dispatch_sieve(size_t n)
+{
+	if (n < numeric_limits<uint32_t>::max() / 2)
+	{
+		nsieve<uint32_t>( n);
+	}
+	else
+	{
+		nsieve<size_t>( n);
+	}
+}
+
 int main(int argc, char **argv) {
   if (argc != 2) {
     std::cerr << "usage: " << argv[0] << " <n>\n";
@@ -65,6 +78,6 @@ int main(int argc, char **argv) {
     }
   }
   for (std::size_t i = 0; i < 3; ++i) {
-    nsieve(10000 << (count - i));
+    dispatch_sieve(10000 << (count - i));
   }
 }
