@@ -15,23 +15,6 @@
 using namespace std;
 using namespace std::views;
 
-// void nsieve(std::size_t max) {
-//   static std::vector<bool> flags;
-//   flags.assign(max, false);
-//   std::size_t count = 0;
-//   for (std::size_t value = 2; value < max; ++value) {
-//     if (!flags[value]) {
-//       ++count;
-//       for (std::size_t multiple = value * 2; multiple < max;
-//            multiple += value) {
-//         flags[multiple] = true;
-//       }
-//     }
-//   }
-//   std::cout << "Primes up to " << std::setw(8) << max << ' ' << std::setw(8)
-//             << count << '\n';
-// }
-
 template <unsigned_integral T>
 void nsieve( T n)
 {
@@ -63,7 +46,7 @@ void dispatch_sieve(size_t n)
 	}
 }
 
-int main(int argc, char **argv) {
+int main_modified(int argc, char *argv[]) {
   if (argc != 2) {
     std::cerr << "usage: " << argv[0] << " <n>\n";
     return 1;
@@ -80,4 +63,49 @@ int main(int argc, char **argv) {
   for (std::size_t i = 0; i < 3; ++i) {
     dispatch_sieve(10000 << (count - i));
   }
+
+  return 0;
+}
+
+void nsieve_orig(std::size_t max) {
+  static std::vector<bool> flags;
+  flags.assign(max, false);
+  std::size_t count = 0;
+  for (std::size_t value = 2; value < max; ++value) {
+    if (!flags[value]) {
+      ++count;
+      for (std::size_t multiple = value * 2; multiple < max;
+           multiple += value) {
+        flags[multiple] = true;
+      }
+    }
+  }
+  std::cout << "Primes up to " << std::setw(8) << max << ' ' << std::setw(8)
+            << count << '\n';
+}
+
+int main_orig(int argc, char *argv[]) {
+  if (argc != 2) {
+    std::cerr << "usage: " << argv[0] << " <n>\n";
+    return 1;
+  }
+  unsigned int count;
+  {
+    std::istringstream convertor(argv[1]);
+    if (!(convertor >> count) || !convertor.eof()) {
+      std::cerr << "usage: " << argv[0] << " <n>\n";
+      std::cerr << "\tn must be an integer\n";
+      return 1;
+    }
+  }
+  for (std::size_t i = 0; i < 3; ++i) {
+    nsieve_orig(10000 << (count - i));
+  }
+
+  return 0;
+}
+
+int main(int argc, char *argv[]) {
+	// return main_orig(argc, argv);
+	return main_modified(argc, argv);
 }
